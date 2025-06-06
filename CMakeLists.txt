@@ -18,3 +18,7 @@ add_executable(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} GWL)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 add_subdirectory(src)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    ${CMAKE_SOURCE_DIR}/src/Shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/Shaders)
