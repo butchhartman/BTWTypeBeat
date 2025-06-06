@@ -1,0 +1,4 @@
+Remove the debug popup describing the opengl version and replace it with a print function
+Add the current build type (debug/release) to the print version function
+Turn off compiler warnings when GWL is not the main project
+Have the main CMakeLists.txt include the win32, mac, or linux subdirectory based on what the target compile platform is
