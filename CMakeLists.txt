@@ -11,12 +11,21 @@ FetchContent_Declare(
     GIT_TAG v0.0.1
 )
 
-FetchContent_MakeAvailable(GWL)
+FetchContent_Declare(
+    GML
+    GIT_REPOSITORY https://github.com/butchhartman/GameMathLibrary.git
+    GIT_TAG v0.0.1-alpha.5
+)
 
+FetchContent_MakeAvailable(GWL GML)
+
+link_libraries(GML)
 add_executable(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} GWL)
+
 target_include_directories(${PROJECT_NAME} PUBLIC include)
+
 add_subdirectory(src)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

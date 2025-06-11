@@ -19,6 +19,7 @@ class Shader {
         ~Shader();
 
         void use();
+        GLuint getID();
 };
 
 }

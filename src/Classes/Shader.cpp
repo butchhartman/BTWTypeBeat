@@ -79,3 +79,7 @@ Shader::~Shader() {
 void Shader::use() {
     glUseProgram(this->programID);
 }
+
+GLuint Shader::getID() {
+    return this->programID;
+}

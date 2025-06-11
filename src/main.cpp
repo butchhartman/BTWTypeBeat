@@ -1,13 +1,19 @@
 #include <iostream>
 #include <Classes/Shader.hpp>
+#include <gml.hpp>
 #include <GameWindow.h>
 #include <glad/glad.h>
 
+// Icky, add as a gwl function to retrieve these values
+float windowWidth = 800.0f;
+float windowHeight = 600.0f;
 
 void inputCallback(GameWindow* window, gwInputEvent event) {
     switch (event.eventType) {
         case gw_windowReizeEvent:
             glViewport(0, 0, event.windowWidth, event.windowHeight);
+            windowWidth = (float)event.windowWidth;
+            windowHeight = (float)event.windowHeight;
             break;
         default:
             break;
@@ -50,11 +56,32 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    gml::Mat4 myTranslationMat = gml::Mat4::translation(0.0f, 0.0f, 0.0f);
+    gml::Mat4 myViewMat = gml::Mat4::translation(0.0f, 0.0f, -3.0f);
+    gml::Mat4 myPerspectiveMat = 
+        gml::Mat4::perspectiveProjection(.78539816f, windowWidth/windowHeight, 0.1f, 400.0f);
+
     while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
         BasicShader.use();
+
+        GLuint modelMatLocation = 
+            glGetUniformLocation(BasicShader.getID(), "modelMat");
+        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, myTranslationMat.getData());
+
+        GLuint viewMatLocation = 
+            glGetUniformLocation(BasicShader.getID(), "viewMat");
+        glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, myViewMat.getData());
+
+        myPerspectiveMat =  
+            gml::Mat4::perspectiveProjection(0.78539816f, windowWidth/windowHeight, 0.1f, 100.0f);
+        
+        GLuint perspectiveMatLocation = 
+            glGetUniformLocation(BasicShader.getID(), "perspectiveMat");
+        glUniformMatrix4fv(perspectiveMatLocation, 1, GL_FALSE, myPerspectiveMat.getData());
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
