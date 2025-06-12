@@ -57,9 +57,18 @@ int main() {
     glEnableVertexAttribArray(0);
 
     gml::Mat4 myTranslationMat = gml::Mat4::translation(0.0f, 0.0f, 0.0f);
-    gml::Mat4 myViewMat = gml::Mat4::translation(0.0f, 0.0f, -3.0f);
+    gml::Mat4 myViewMat = gml::Mat4::lookAt(
+        gml::Vec3(4.0f, 0.0f, 3.0f),
+        gml::Vec3(0.0f, 0.0f, 0.0f),
+        gml::Vec3(0.0f, 1.0f, 0.0f)
+    );
+    // gml::Mat4 myViewMat = gml::Mat4();
     gml::Mat4 myPerspectiveMat = 
         gml::Mat4::perspectiveProjection(.78539816f, windowWidth/windowHeight, 0.1f, 400.0f);
+
+
+    gml::Vec4  NDCvec 
+        = myPerspectiveMat * myViewMat * myTranslationMat * gml::Vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 
     while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
 
@@ -76,7 +85,7 @@ int main() {
         glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, myViewMat.getData());
 
         myPerspectiveMat =  
-            gml::Mat4::perspectiveProjection(0.78539816f, windowWidth/windowHeight, 0.1f, 100.0f);
+            gml::Mat4::perspectiveProjection(0.78539816f, windowWidth/windowHeight, 0.1f, 400.0f);
         
         GLuint perspectiveMatLocation = 
             glGetUniformLocation(BasicShader.getID(), "perspectiveMat");

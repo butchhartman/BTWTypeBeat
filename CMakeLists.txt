@@ -14,7 +14,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     GML
     GIT_REPOSITORY https://github.com/butchhartman/GameMathLibrary.git
-    GIT_TAG v0.0.1-alpha.5
+    GIT_TAG v0.0.1-alpha.8 
 )
 
 FetchContent_MakeAvailable(GWL GML)
