@@ -8,7 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
     GWL
     GIT_REPOSITORY https://github.com/butchhartman/Game-Window-Library.git
-    GIT_TAG v0.0.1
+    GIT_TAG v0.0.4
 )
 
 FetchContent_Declare(
