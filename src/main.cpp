@@ -4,7 +4,7 @@
 #include <gml.hpp>
 #include <GameWindow.h>
 #include <glad/glad.h>
-
+#include <Classes/Geometry/Cube.hpp>
 
 // Icky, add as a gwl function to retrieve these values
 float windowWidth = 800.0f;
@@ -17,12 +17,6 @@ EngineClasses::Camera sceneCamera = EngineClasses::Camera(
     400.0f,
     300.0f
 );
-
-float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f
-};
 
 void inputCallback(GameWindow* window, gwInputEvent event) {
     switch (event.eventType) {
@@ -84,21 +78,9 @@ int main() {
 
     glClearColor(0.0f, 0.0f, 0.05f, 1.0f);
 
+    EngineClasses::Cube::cubeDataInit();
+
     EngineClasses::Shader BasicShader("Shaders/vertexShader.vert", "Shaders/fragmentShader.frag");
-
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    gml::Mat4 myTranslationMat = gml::Mat4::translation(0.0f, 0.0f, 0.0f);
 
     gml::Mat4 myPerspectiveMat = 
         gml::Mat4::perspectiveProjection(.78539816f, windowWidth/windowHeight, 0.1f, 50.0f);
@@ -115,13 +97,19 @@ int main() {
     double lastTime = gwlGetTime(window);
     double elapsedTime;
 
+
+    EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f));
+    EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f));
+
     while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        BasicShader.use();
+        myCube.bindVBO();
+        myCube.bindVAO();
 
-        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, myTranslationMat.getData());
+        BasicShader.use();
+        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, myCube.getModelMat().getData()); 
 
         glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, sceneCamera.getViewMat());
 
@@ -130,8 +118,11 @@ int main() {
         
         glUniformMatrix4fv(perspectiveMatLocation, 1, GL_FALSE, myPerspectiveMat.getData());
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        myCube.draw();
+
+        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, mySecondsCube.getModelMat().getData()); 
+
+        mySecondsCube.draw();
 
         gwlSwapBuffers(window);
         gwlPollEvents(window);
