@@ -2,6 +2,9 @@
 
 using namespace EngineClasses;
 
+Shader::Shader() {
+
+}
 // Essentially copied from learnopengl, but file handling is somewhat of a weakpoint for me so this taught me correct ways to do it
 Shader::Shader(const std::string vertexShaderPath, const std::string fragmentShaderPath) {
     std::string vertexSource;

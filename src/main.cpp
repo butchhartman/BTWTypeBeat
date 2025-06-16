@@ -15,7 +15,10 @@ EngineClasses::Camera sceneCamera = EngineClasses::Camera(
     2.5f,
     0.05f,
     400.0f,
-    300.0f
+    300.0f,
+    0.78539816f,
+    windowWidth/windowHeight,
+    100.0f
 );
 
 void inputCallback(GameWindow* window, gwInputEvent event) {
@@ -24,7 +27,7 @@ void inputCallback(GameWindow* window, gwInputEvent event) {
             glViewport(0, 0, event.windowWidth, event.windowHeight);
             windowWidth = (float)event.windowWidth;
             windowHeight = (float)event.windowHeight;
-
+            sceneCamera.setAspectRatio(windowWidth/windowHeight);
             sceneCamera.setMouseLockPosition(windowWidth/2, windowHeight/2);
             break;
 
@@ -76,53 +79,25 @@ int main() {
     gwlPrintGLVersion(window);
     gwlShowWindow(window);
 
-    glClearColor(0.0f, 0.0f, 0.05f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 
     EngineClasses::Cube::cubeDataInit();
 
     EngineClasses::Shader BasicShader("Shaders/vertexShader.vert", "Shaders/fragmentShader.frag");
 
-    gml::Mat4 myPerspectiveMat = 
-        gml::Mat4::perspectiveProjection(.78539816f, windowWidth/windowHeight, 0.1f, 50.0f);
-
-    GLuint modelMatLocation = 
-        glGetUniformLocation(BasicShader.getID(), "modelMat");
-
-    GLuint viewMatLocation = 
-        glGetUniformLocation(BasicShader.getID(), "viewMat");
-
-    GLuint perspectiveMatLocation = 
-        glGetUniformLocation(BasicShader.getID(), "perspectiveMat");
-
     double lastTime = gwlGetTime(window);
     double elapsedTime;
 
 
-    EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f));
-    EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f));
+    EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
+    EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader);
 
     while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        myCube.bindVBO();
-        myCube.bindVAO();
-
-        BasicShader.use();
-        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, myCube.getModelMat().getData()); 
-
-        glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, sceneCamera.getViewMat());
-
-        myPerspectiveMat =  
-            gml::Mat4::perspectiveProjection(0.78539816f, windowWidth/windowHeight, 0.1f, 50.0f);
-        
-        glUniformMatrix4fv(perspectiveMatLocation, 1, GL_FALSE, myPerspectiveMat.getData());
-
-        myCube.draw();
-
-        glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, mySecondsCube.getModelMat().getData()); 
-
-        mySecondsCube.draw();
+        myCube.draw(sceneCamera);
+        mySecondsCube.draw(sceneCamera);
 
         gwlSwapBuffers(window);
         gwlPollEvents(window);

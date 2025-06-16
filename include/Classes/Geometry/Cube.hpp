@@ -2,6 +2,7 @@
 #define _ENGINE_GEOMETRY_CUBE_H_
 
 #include <Classes/Shader.hpp>
+#include <Classes/Camera.hpp>
 #include <gml.hpp>
 
 namespace EngineClasses {
@@ -14,13 +15,17 @@ class Cube {
         static gml::Mat4 model;
 
     private:
+        EngineClasses::Shader* cubeShader;
+        GLuint modelMatPos;
+        GLuint viewMatPos;
+        GLuint projectionMatPos;
         gml::Vec3 position;
 
     public:
-        Cube(gml::Vec3 position);
+        Cube(gml::Vec3 position, EngineClasses::Shader* cubeShader);
         ~Cube();
         gml::Mat4 getModelMat();
-        void draw();
+        void draw(EngineClasses::Camera sceneCamera);
         static void cubeDataInit();
         static void bindVBO();
         static void bindVAO();

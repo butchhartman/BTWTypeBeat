@@ -9,7 +9,10 @@ Camera::Camera(
     float cameraSpeed, 
     float sensitivity,
     float mouseLockX, 
-    float mouseLockY
+    float mouseLockY,
+    float fov,
+    float aspectRatio,
+    float viewDistance
     )   
     // Dumb syntax needed so that the vec3 members wont try to initialize with
     // an invalid constructor. Fix this by adding a no parameter default
@@ -18,6 +21,12 @@ Camera::Camera(
     CameraFront(0.0f, 0.0f, -1.0f), 
     CameraUp(0.0f, 1.0f, 0.0f) 
     {
+
+    this->fov = fov;
+    this->aspectRatio = aspectRatio;
+    this->nearPlane = 0.1f; // constant near plane
+    this->farPlane = viewDistance;
+
     this->CameraPos = CameraPos;
     this->CameraFront = gml::Vec3(0.0f, 0.0f, -1.0f);
     this->CameraUp = gml::Vec3(0.0f, 1.0f, 0.0f);
@@ -56,6 +65,9 @@ void Camera::setLeft(bool status) {
 
 void Camera::setRight(bool status) {
     this->right = status;
+}
+void Camera::setAspectRatio(float aspectRatio) {
+    this->aspectRatio = aspectRatio;
 }
 
 void Camera::setMouseLockPosition(float mouseLockX, float mouseLockY) {
@@ -124,12 +136,20 @@ void Camera::updateRotation(float newMouseXPos, float newMouseYPos) {
 
 }
 
-const float* Camera::getViewMat() {
+gml::Mat4 Camera::getViewMat() {
     return gml::Mat4::lookAt(
         this->CameraPos,
         this->CameraPos + this->CameraFront,
-        this->CameraUp).getData();
+        this->CameraUp);
 }
 
+gml::Mat4 Camera::getPerspectiveMat() {
+    return gml::Mat4::perspectiveProjection(
+        this->fov,
+        this->aspectRatio,
+        this->nearPlane,
+        this->farPlane
+    );
+}
 
 } // namespace EngineClasses

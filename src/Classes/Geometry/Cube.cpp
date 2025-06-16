@@ -63,8 +63,14 @@ namespace EngineClasses {
 
     // Once again, had to use member initializer hack here because of the lack
     // of a no-param initializer in the gml datatypes
-    Cube::Cube(gml::Vec3 position) : position(0.0f, 0.0f, 0.0f) {
+    Cube::Cube(gml::Vec3 position, EngineClasses::Shader* cubeShader) : position(0.0f, 0.0f, 0.0f) {
         this->position = position;
+        this->cubeShader = cubeShader;
+
+        this->modelMatPos = glGetUniformLocation(this->cubeShader->getID(), "modelMat");
+        this->viewMatPos = glGetUniformLocation(this->cubeShader->getID(), "viewMat");
+        this->projectionMatPos = glGetUniformLocation(this->cubeShader->getID(), "projectionMat");
+
     }
 
     Cube::~Cube() {
@@ -76,7 +82,18 @@ namespace EngineClasses {
         return gml::Mat4::translation(this->position.X(), this->position.Y(), this->position.Z());
     }
 
-    void Cube::draw() {
+    void Cube::draw(EngineClasses::Camera sceneCamera) {
+        glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+        glBindVertexArray(cubeVAO);
+
+        // this->cubeShader.use();
+        // glUseProgram(this->cubeShaderID);
+        this->cubeShader->use();
+
+        glUniformMatrix4fv(this->modelMatPos, 1, GL_FALSE, this->getModelMat().getData());
+        glUniformMatrix4fv(this->viewMatPos, 1, GL_FALSE, sceneCamera.getViewMat().getData()); 
+        glUniformMatrix4fv(this->projectionMatPos, 1, GL_FALSE, sceneCamera.getPerspectiveMat().getData()); 
+
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 

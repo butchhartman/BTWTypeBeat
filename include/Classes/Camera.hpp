@@ -7,6 +7,11 @@ namespace EngineClasses {
 
 class Camera {
     private:
+        float fov;
+        float aspectRatio;
+        float nearPlane;
+        float farPlane;
+
         float cameraSpeed;
         float sensitivity;
 
@@ -31,7 +36,10 @@ class Camera {
             float cameraSpeed,
             float sensitivity,
             float mouseLockX,
-            float mouseLockY
+            float mouseLockY,
+            float fov,
+            float aspectRatio,
+            float viewDistance
         );
         ~Camera();
 
@@ -41,10 +49,12 @@ class Camera {
         void setBackward(bool status);
         void setLeft(bool status);
         void setRight(bool status);
+        void setAspectRatio(float aspectRatio);
 
         void updatePosition(double deltaTime);
         void updateRotation(float newMouseXPos, float newMouseYPos);
-        const float* getViewMat();
+        gml::Mat4 getViewMat();
+        gml::Mat4 getPerspectiveMat();
 };
 
 } // namespace EngineClasses
