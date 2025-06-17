@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-#include <glad/glad.h>
+#include <glad.h>
 
 namespace EngineClasses {
 

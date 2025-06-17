@@ -27,6 +27,7 @@ target_link_libraries(${PROJECT_NAME} GWL)
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 add_subdirectory(src)
+add_subdirectory(vendor)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy_directory

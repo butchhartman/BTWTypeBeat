@@ -3,7 +3,7 @@
 #include <Classes/Camera.hpp>
 #include <gml.hpp>
 #include <GameWindow.h>
-#include <glad/glad.h>
+#include <glad.h>
 #include <Classes/Geometry/Cube.hpp>
 #include <Classes/Filesystem/FileReader.h>
 
@@ -103,6 +103,7 @@ int main() {
 
     uint32_t bmpWidth;
     uint32_t bmpHeight;
+    // TODO: Create a texture class that handles all this bullshit, make readBMP function more readable and consider addiing it to a namespace or something.
     unsigned char* bmpData = readBMP("a.bmp", &bmpWidth, &bmpHeight);
 
     unsigned int textureID;
