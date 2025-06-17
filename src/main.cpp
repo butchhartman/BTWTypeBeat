@@ -5,7 +5,7 @@
 #include <GameWindow.h>
 #include <glad.h>
 #include <Classes/Geometry/Cube.hpp>
-#include <Classes/Filesystem/FileReader.h>
+#include <Filesystem/FileReader.h>
 
 // Icky, add as a gwl function to retrieve these values
 float windowWidth = 800.0f;
