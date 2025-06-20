@@ -1,9 +1,11 @@
 #ifndef ENGINE_GEOMETRY_TEXTURED_CUBE
 #define ENGINE_GEOMETRY_TEXTURED_CUBE
 
+#include <Classes/Texture.hpp>
+
 namespace EngineClasses {
 
-class TexturedCube : Cube {
+class TexturedCube : public Cube {
     private:
         static const float texturedCubeVertices[];
         static GLuint texturedCubeVBO;

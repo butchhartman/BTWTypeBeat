@@ -8,57 +8,45 @@
 #include <Classes/Geometry/Cube.hpp>
 #include <Classes/Geometry/TexturedCube.hpp>
 #include <Filesystem/FileReader.h>
+#include <Singletons/WindowManager.hpp>
+#include <Singletons/EngineSystemsManager.hpp>
 
-// Icky, add as a gwl function to retrieve these values
-float windowWidth = 800.0f;
-float windowHeight = 600.0f;
 
-EngineClasses::Camera sceneCamera = EngineClasses::Camera(
-    gml::Vec3(0.0f, 0.0f, 3.0f),
-    2.5f,
-    0.05f,
-    400.0f,
-    300.0f,
-    0.78539816f,
-    windowWidth/windowHeight,
-    100.0f
-);
+EngineSingletons::EngineSystemsManager sysMan;
 
 void inputCallback(GameWindow* window, gwInputEvent event) {
     switch (event.eventType) {
         case gw_windowReizeEvent:
             glViewport(0, 0, event.windowWidth, event.windowHeight);
-            windowWidth = (float)event.windowWidth;
-            windowHeight = (float)event.windowHeight;
-            sceneCamera.setAspectRatio(windowWidth/windowHeight);
-            sceneCamera.setMouseLockPosition(windowWidth/2, windowHeight/2);
+            sysMan.renderingManager.getCameraPtr()->setAspectRatio((float)event.windowWidth/(float)event.windowHeight);
+            sysMan.renderingManager.getCameraPtr()->setMouseLockPosition((float)event.windowWidth/2.0f, (float)event.windowHeight/2.0f);
             break;
 
         case gw_keyboardEvent:
             if (event.key == gw_W && event.keyStateFlags & KEY_DOWN_BIT)  {
-                sceneCamera.setForward(true);
+                sysMan.renderingManager.getCameraPtr()->setForward(true);
             } else if (event.key == gw_W && event.keyStateFlags & KEY_UP_BIT) {
-                sceneCamera.setForward(false);
+                sysMan.renderingManager.getCameraPtr()->setForward(false);
             }
             if (event.key == gw_A && event.keyStateFlags & KEY_DOWN_BIT)  {
-                sceneCamera.setLeft(true);
+                sysMan.renderingManager.getCameraPtr()->setLeft(true);
             } else if (event.key == gw_A && event.keyStateFlags & KEY_UP_BIT) {
-                sceneCamera.setLeft(false);
+                sysMan.renderingManager.getCameraPtr()->setLeft(false);
             }
             if (event.key == gw_S && event.keyStateFlags & KEY_DOWN_BIT)  {
-                sceneCamera.setBackward(true);
+                sysMan.renderingManager.getCameraPtr()->setBackward(true);
             } else if (event.key == gw_S && event.keyStateFlags & KEY_UP_BIT) {
-                sceneCamera.setBackward(false);
+                sysMan.renderingManager.getCameraPtr()->setBackward(false);
             }
             if (event.key == gw_D && event.keyStateFlags & KEY_DOWN_BIT)  {
-                sceneCamera.setRight(true);
+                sysMan.renderingManager.getCameraPtr()->setRight(true);
             } else if (event.key == gw_D && event.keyStateFlags & KEY_UP_BIT) {
-                sceneCamera.setRight(false);
+                sysMan.renderingManager.getCameraPtr()->setRight(false);
             }
             break;
 
         case gw_mouseEvent:
-            sceneCamera.updateRotation(event.xPos, event.yPos);
+            sysMan.renderingManager.getCameraPtr()->updateRotation(event.xPos, event.yPos);
             break;
 
         default:
@@ -66,77 +54,48 @@ void inputCallback(GameWindow* window, gwInputEvent event) {
     }
 }
 
-const float triangleVertices[] = {
-    0.0f, 0.5f, 0.0f, 0.5f, 1.0f,
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.0f, 1.0f, 0.0f
-};
 
 int main() {
-    gwlPrintVersion();
+    EngineSingletons::WindowManager::setInitWindowName("Voxel Survival Game - Now With Singletons!");
+    EngineSingletons::WindowManager::setInitInputFlags(CAPTURE_MOUSE_BIT);
+    EngineSingletons::WindowManager::setInitInputCallback(inputCallback);
 
-    GameWindow* window = gwlCreateWindow("Voxel Survival Game :v");
-    gwlSetInputFlags(window, CAPTURE_MOUSE_BIT, 1);
-    gwlCreateOpenGLContext(&window);
+    sysMan.init();
 
-    // There is no loader function defined for gwl, so use this instead
-    if (!gladLoadGL()) {
-        std::cout << "Failed to initialize OpenGL functions\n";
-    } 
-
-    gwlSetInputCallback(window, inputCallback);
-    gwlPrintGLVersion(window);
-    gwlShowWindow(window);
-
-    glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-
-    EngineClasses::Cube::cubeDataInit();
-    EngineClasses::TexturedCube::texturedCubeDataInit();
-
+    // TODO: Add shader management to RenderingManager singleton (Maybe create its own singleton, idk if rendering manager is ideal for this)
     EngineClasses::Shader BasicShader("Shaders/vertexShader.vert", "Shaders/fragmentShaderGreen.frag");
     EngineClasses::Shader BasicShader2("Shaders/vertexShader.vert", "Shaders/fragmentShaderBlue.frag");
 
-    double lastTime = gwlGetTime(window);
-    double elapsedTime;
-
+    EngineClasses::Shader texShader = EngineClasses::Shader("Shaders/texTestVertShader.vert", "Shaders/texTestFragShader.frag");
 
     EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
     EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader2);
 
+    // TODO: Add texture management to some singleton (idk if rendering manager is ideal for this or not)
     EngineClasses::Texture dirt = EngineClasses::Texture(
         "a.bmp", 
         EngineClasses::TextureFlags::TEXTURE_FILE_BMP_BIT
     );
 
-    EngineClasses::Shader texShader = EngineClasses::Shader("Shaders/texTestVertShader.vert", "Shaders/texTestFragShader.frag");
 
     EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
 
-    while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
+    while (sysMan.windowManager.isWindowActive()) {
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        sysMan.renderingManager.frameBegin();
 
-        myCube.draw(sceneCamera);
-        mySecondsCube.draw(sceneCamera);
+        // TODO : Eventually have a function that allows you to submit an array of objects of the same mesh to draw using instancing
+        sysMan.renderingManager.drawObject(&myCube);
+        sysMan.renderingManager.drawObject(&mySecondsCube);
+        sysMan.renderingManager.drawObject(&dirtCube);
 
-        // texShader.use();
-        // dirt.use();
-        // glBindBuffer(GL_ARRAY_BUFFER, texTriVBO);
-        // glBindVertexArray(texTriVAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        sysMan.windowManager.swapBuffers();
+        sysMan.windowManager.pollEvents();
 
-        dirtCube.draw(sceneCamera);
 
-        gwlSwapBuffers(window);
-        gwlPollEvents(window);
-
-        elapsedTime = gwlGetTime(window) - lastTime;
-        lastTime = gwlGetTime(window);
-
-        sceneCamera.updatePosition(elapsedTime);
+        sysMan.renderingManager.frameEnd(sysMan.windowManager.getTime());
     }
 
-    gwlCleanupWindow(window);
+    sysMan.shutDown();
     return 0;   
 }

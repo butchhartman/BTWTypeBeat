@@ -8,7 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
     GWL
     GIT_REPOSITORY https://github.com/butchhartman/Game-Window-Library.git
-    GIT_TAG v0.0.4
+    GIT_TAG v0.0.5
 )
 
 FetchContent_Declare(
@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} GWL)
 
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PUBLIC include/Engine)
 
 add_subdirectory(src)
 add_subdirectory(vendor)

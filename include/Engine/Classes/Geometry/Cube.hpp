@@ -1,13 +1,14 @@
 #ifndef _ENGINE_GEOMETRY_CUBE_H_
 #define _ENGINE_GEOMETRY_CUBE_H_
 
+#include <Classes/Geometry/DrawableObject.hpp>
 #include <Classes/Shader.hpp>
 #include <Classes/Camera.hpp>
 #include <gml.hpp>
 
 namespace EngineClasses {
 
-class Cube {
+class Cube : public DrawableObject {
     private:
         static const float cubeVertices[];
         static GLuint cubeVBO;
