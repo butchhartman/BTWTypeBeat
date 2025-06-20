@@ -3,4 +3,5 @@ add_subdirectory(Geometry)
 target_sources(${PROJECT_NAME}
                 PUBLIC
                 Shader.cpp
-                Camera.cpp)
+                Camera.cpp
+                Texture.cpp)

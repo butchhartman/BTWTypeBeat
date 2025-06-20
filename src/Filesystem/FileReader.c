@@ -66,3 +66,8 @@ unsigned char* readBMP(char* filepath, uint32_t* bmpWidth, uint32_t* bmpHeight) 
 
     return pixelData;
 }
+inline void freeFileData(unsigned char *data) {
+    if (data != NULL) {
+        free(data);
+    }
+}

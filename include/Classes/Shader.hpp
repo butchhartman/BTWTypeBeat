@@ -8,6 +8,7 @@
 
 #include <glad.h>
 
+// TODO: Have the shader include, as a member, the location of its model, view, and projection matrix and remove the location members from the cube classes.
 namespace EngineClasses {
 
 class Shader {

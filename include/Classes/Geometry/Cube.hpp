@@ -15,17 +15,19 @@ class Cube {
         static gml::Mat4 model;
 
     private:
-        EngineClasses::Shader* cubeShader;
         GLuint modelMatPos;
         GLuint viewMatPos;
         GLuint projectionMatPos;
         gml::Vec3 position;
 
+    protected:
+        EngineClasses::Shader* cubeShader;
+
     public:
         Cube(gml::Vec3 position, EngineClasses::Shader* cubeShader);
         ~Cube();
         gml::Mat4 getModelMat();
-        void draw(EngineClasses::Camera sceneCamera);
+        virtual void draw(EngineClasses::Camera sceneCamera);
         static void cubeDataInit();
         static void bindVBO();
         static void bindVAO();

@@ -1,10 +1,12 @@
 #include <iostream>
 #include <Classes/Shader.hpp>
 #include <Classes/Camera.hpp>
+#include <Classes/Texture.hpp>
 #include <gml.hpp>
 #include <GameWindow.h>
 #include <glad.h>
 #include <Classes/Geometry/Cube.hpp>
+#include <Classes/Geometry/TexturedCube.hpp>
 #include <Filesystem/FileReader.h>
 
 // Icky, add as a gwl function to retrieve these values
@@ -90,6 +92,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     EngineClasses::Cube::cubeDataInit();
+    EngineClasses::TexturedCube::texturedCubeDataInit();
 
     EngineClasses::Shader BasicShader("Shaders/vertexShader.vert", "Shaders/fragmentShaderGreen.frag");
     EngineClasses::Shader BasicShader2("Shaders/vertexShader.vert", "Shaders/fragmentShaderBlue.frag");
@@ -101,50 +104,29 @@ int main() {
     EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
     EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader2);
 
-    uint32_t bmpWidth;
-    uint32_t bmpHeight;
-    // TODO: Create a texture class that handles all this bullshit, make readBMP function more readable and consider addiing it to a namespace or something.
-    unsigned char* bmpData = readBMP("a.bmp", &bmpWidth, &bmpHeight);
-
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bmpWidth, bmpHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, bmpData);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    free(bmpData);
+    EngineClasses::Texture dirt = EngineClasses::Texture(
+        "a.bmp", 
+        EngineClasses::TextureFlags::TEXTURE_FILE_BMP_BIT
+    );
 
     EngineClasses::Shader texShader = EngineClasses::Shader("Shaders/texTestVertShader.vert", "Shaders/texTestFragShader.frag");
 
-    GLuint texTriVBO;
-    glGenBuffers(1, &texTriVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, texTriVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices, GL_STATIC_DRAW);
-
-    GLuint texTriVAO;
-    glGenVertexArrays(1, &texTriVAO);
-    glBindVertexArray(texTriVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(1);
+    EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
 
     while (gwlGetWindowStatus(window) == GW_WINDOW_ACTIVE) {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // myCube.draw(sceneCamera);
-        // mySecondsCube.draw(sceneCamera);
+        myCube.draw(sceneCamera);
+        mySecondsCube.draw(sceneCamera);
 
-        texShader.use();
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glBindBuffer(GL_ARRAY_BUFFER, texTriVBO);
-        glBindVertexArray(texTriVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // texShader.use();
+        // dirt.use();
+        // glBindBuffer(GL_ARRAY_BUFFER, texTriVBO);
+        // glBindVertexArray(texTriVAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        dirtCube.draw(sceneCamera);
 
         gwlSwapBuffers(window);
         gwlPollEvents(window);

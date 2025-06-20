@@ -7,6 +7,8 @@ extern "C" {
 
 extern unsigned char* readBMP(char* filepath, uint32_t* bmpWidth, uint32_t* bmpHeight);
 
+extern inline void freeFileData(unsigned char* data);
+
 #ifdef __cplusplus
 };
 #endif
