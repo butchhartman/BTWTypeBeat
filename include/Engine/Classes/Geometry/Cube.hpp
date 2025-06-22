@@ -13,15 +13,15 @@ class Cube : public DrawableObject {
         static const float cubeVertices[];
         static GLuint cubeVBO;
         static GLuint cubeVAO;
-        static gml::Mat4 model;
+        static gml::Mat4 model; // TODO: Remove this
 
     private:
         GLuint modelMatPos;
         GLuint viewMatPos;
         GLuint projectionMatPos;
-        gml::Vec3 position;
 
     protected:
+        gml::Vec3 position;
         EngineClasses::Shader* cubeShader;
 
     public:

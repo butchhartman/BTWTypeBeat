@@ -11,6 +11,8 @@
 #include <Engine/Singletons/WindowManager.hpp>
 #include <Engine/Singletons/EngineSystemsManager.hpp>
 
+#include <Game/Classes/Chunk.hpp>
+
 
 EngineSingletons::EngineSystemsManager sysMan;
 
@@ -64,12 +66,12 @@ int main() {
 
     // TODO: Add shader management to RenderingManager singleton (Maybe create its own singleton, idk if rendering manager is ideal for this)
     EngineClasses::Shader BasicShader("Shaders/vertexShader.vert", "Shaders/fragmentShaderGreen.frag");
-    EngineClasses::Shader BasicShader2("Shaders/vertexShader.vert", "Shaders/fragmentShaderBlue.frag");
+    // EngineClasses::Shader BasicShader2("Shaders/vertexShader.vert", "Shaders/fragmentShaderBlue.frag");
 
     EngineClasses::Shader texShader = EngineClasses::Shader("Shaders/texTestVertShader.vert", "Shaders/texTestFragShader.frag");
 
     EngineClasses::Cube myCube = EngineClasses::Cube(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
-    EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader2);
+    // EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader2);
 
     // TODO: Add texture management to some singleton (idk if rendering manager is ideal for this or not)
     EngineClasses::Texture dirt = EngineClasses::Texture(
@@ -79,15 +81,19 @@ int main() {
 
 
     EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
+    GameClasses::Chunk myChunk = GameClasses::Chunk(gml::Vec3(9.0f, 0.0f, 0.0f),  &BasicShader);
+
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (sysMan.windowManager.isWindowActive()) {
 
         sysMan.renderingManager.frameBegin();
 
         // TODO : Eventually have a function that allows you to submit an array of objects of the same mesh to draw using instancing
-        sysMan.renderingManager.drawObject(&myCube);
-        sysMan.renderingManager.drawObject(&mySecondsCube);
-        sysMan.renderingManager.drawObject(&dirtCube);
+        // sysMan.renderingManager.drawObject(&myCube);
+        // sysMan.renderingManager.drawObject(&mySecondsCube);
+        // sysMan.renderingManager.drawObject(&dirtCube);
+        myChunk.draw(*sysMan.renderingManager.getCameraPtr());
 
         sysMan.windowManager.swapBuffers();
         sysMan.windowManager.pollEvents();

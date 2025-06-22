@@ -26,7 +26,7 @@ namespace EngineSingletons {
             0.05f,
             0.0f,
             0.0f,
-            0.78539816f,
+            1.78539816f,
             16.0f/9.0f,
             100.0f
         );
@@ -39,6 +39,10 @@ namespace EngineSingletons {
 
         glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
         glEnable(GL_DEPTH_TEST);
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
 
         EngineClasses::Cube::cubeDataInit();
         EngineClasses::TexturedCube::texturedCubeDataInit();
