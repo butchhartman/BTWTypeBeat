@@ -1,9 +1,9 @@
 #ifndef _ENGINE_GEOMETRY_CUBE_H_
 #define _ENGINE_GEOMETRY_CUBE_H_
 
-#include <Classes/Geometry/DrawableObject.hpp>
-#include <Classes/Shader.hpp>
-#include <Classes/Camera.hpp>
+#include <Engine/Classes/Geometry/DrawableObject.hpp>
+#include <Engine/Classes/Shader.hpp>
+#include <Engine/Classes/Camera.hpp>
 #include <gml.hpp>
 
 namespace EngineClasses {

@@ -1,8 +1,8 @@
 #ifndef ENGINE_SINGLETONS_RENDERINGMANAGER_H_
 #define ENGINE_SINGLETONS_RENDERINGMANAGER_H_
 
-#include <Classes/Camera.hpp>
-#include <Classes/Geometry/DrawableObject.hpp>
+#include <Engine/Classes/Camera.hpp>
+#include <Engine/Classes/Geometry/DrawableObject.hpp>
 
 namespace EngineSingletons {
 

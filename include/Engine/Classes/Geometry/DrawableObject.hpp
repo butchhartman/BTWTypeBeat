@@ -1,7 +1,7 @@
 #ifndef ENGINE_CLASSES_DRAWABLEOBJECT_H_
 #define ENGINE_CLASSES_DRAWABLEOBJECT_H_
 
-#include <Classes/Camera.hpp>
+#include <Engine/Classes/Camera.hpp>
 
 namespace EngineClasses {
 

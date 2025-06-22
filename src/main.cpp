@@ -1,15 +1,15 @@
 #include <iostream>
-#include <Classes/Shader.hpp>
-#include <Classes/Camera.hpp>
-#include <Classes/Texture.hpp>
+#include <Engine/Classes/Shader.hpp>
+#include <Engine/Classes/Camera.hpp>
+#include <Engine/Classes/Texture.hpp>
 #include <gml.hpp>
 #include <GameWindow.h>
 #include <glad.h>
-#include <Classes/Geometry/Cube.hpp>
-#include <Classes/Geometry/TexturedCube.hpp>
-#include <Filesystem/FileReader.h>
-#include <Singletons/WindowManager.hpp>
-#include <Singletons/EngineSystemsManager.hpp>
+#include <Engine/Classes/Geometry/Cube.hpp>
+#include <Engine/Classes/Geometry/TexturedCube.hpp>
+#include <Engine/Filesystem/FileReader.h>
+#include <Engine/Singletons/WindowManager.hpp>
+#include <Engine/Singletons/EngineSystemsManager.hpp>
 
 
 EngineSingletons::EngineSystemsManager sysMan;

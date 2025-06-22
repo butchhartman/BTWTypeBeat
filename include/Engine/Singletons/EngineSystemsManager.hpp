@@ -1,8 +1,8 @@
 #ifndef ENGINE_SINGLETONS_ENGINESYSTEMMANAGER_H_
 #define ENGINE_SINGLETONS_ENGINESYSTEMMANAGER_H_
 
-#include <Singletons/WindowManager.hpp>
-#include <Singletons/RenderingManager.hpp>
+#include <Engine/Singletons/WindowManager.hpp>
+#include <Engine/Singletons/RenderingManager.hpp>
 
 namespace EngineSingletons {
 

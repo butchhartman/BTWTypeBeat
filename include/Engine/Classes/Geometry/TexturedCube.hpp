@@ -1,7 +1,7 @@
 #ifndef ENGINE_GEOMETRY_TEXTURED_CUBE
 #define ENGINE_GEOMETRY_TEXTURED_CUBE
 
-#include <Classes/Texture.hpp>
+#include <Engine/Classes/Texture.hpp>
 
 namespace EngineClasses {
 

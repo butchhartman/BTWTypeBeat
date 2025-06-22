@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stdint.h>
 #include <glad.h>
-#include <Filesystem/FileReader.h>
-#include <Classes/Texture.hpp>
+#include <Engine/Filesystem/FileReader.h>
+#include <Engine/Classes/Texture.hpp>
 
 
 namespace EngineClasses {

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
-#include <Filesystem/FileReader.h>
+#include <Engine/Filesystem/FileReader.h>
 
 // tldr:
 // texture data in opengl is just 3 numbers describing RGB values for a specific pixel

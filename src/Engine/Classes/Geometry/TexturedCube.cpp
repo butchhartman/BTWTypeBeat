@@ -1,6 +1,6 @@
-#include <Classes/Geometry/Cube.hpp>
-#include <Classes/Texture.hpp>
-#include <Classes/Geometry/TexturedCube.hpp>
+#include <Engine/Classes/Geometry/Cube.hpp>
+#include <Engine/Classes/Texture.hpp>
+#include <Engine/Classes/Geometry/TexturedCube.hpp>
 
 
 namespace EngineClasses {

@@ -1,5 +1,5 @@
 #include <GameWindow.h>
-#include <Singletons/WindowManager.hpp>
+#include <Engine/Singletons/WindowManager.hpp>
 
 namespace EngineSingletons {
 

@@ -1,9 +1,9 @@
 #include <glad.h>
 #include <stdexcept>
-#include <Classes/Camera.hpp>
-#include <Classes/Geometry/Cube.hpp>
-#include <Classes/Geometry/TexturedCube.hpp>
-#include <Singletons/RenderingManager.hpp>
+#include <Engine/Classes/Camera.hpp>
+#include <Engine/Classes/Geometry/Cube.hpp>
+#include <Engine/Classes/Geometry/TexturedCube.hpp>
+#include <Engine/Singletons/RenderingManager.hpp>
 
 namespace EngineSingletons {
 

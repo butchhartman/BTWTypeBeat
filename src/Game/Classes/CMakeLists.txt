@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 3.13)
-add_subdirectory(Engine)
-add_subdirectory(Game)
 target_sources(${PROJECT_NAME}
                 PUBLIC
-                main.cpp)
+                Chunk.cpp)
