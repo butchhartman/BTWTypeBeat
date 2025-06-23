@@ -7,17 +7,19 @@ namespace GameClasses {
 
 enum blockID {
     Air,
-    Solid
+    Dirt 
 };
 
-class Block : public EngineClasses::Cube {
+class Block {
     private:
         blockID ID;
+        bool active;
     public:
-        Block(gml::Vec3 position, EngineClasses::Shader* shader);
+        Block();
         ~Block();
 
-        blockID getID();
+        void setActive(bool active);
+        bool getActive();
 
 };
 

@@ -2,17 +2,21 @@
 
 namespace GameClasses {
 
-    Block::Block(gml::Vec3 position, EngineClasses::Shader* shader) : Cube(position, shader) {
-        this->ID = Solid;
+    Block::Block() {
+        this->active = true;
+        this->ID = Dirt;
     }
 
     Block::~Block() {
 
     }
 
-    blockID Block::getID() {
-        return this->ID;
+    void Block::setActive(bool status) {
+        this->active = status;
     }
 
+    bool Block::getActive() {
+        return this->active;
+    }
 
 } // namespace GameClasses

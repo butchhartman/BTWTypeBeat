@@ -17,25 +17,37 @@
 
 // What I'm doing here is not looking good in terms of actually working. I think I need to read up on voxel engines and how they work.
 
+// By updating the implementation to include all chunk cube vertices in a single VBO (allowing drawing with 1 draw call), the framerate rose to 3600. It's as fast as if nothing is being drawn at all.
+
 namespace GameClasses {
 
+// TODO: Make chunk dimensions modifiable?
+
 class Chunk {
+    public:
+        static const int chunkSize = 16;
     private:
-        static const uint32_t chunkWidth = 16;
-        // This causes a null pointer dereference when it is too large for some fucking reason
-        static const uint32_t chunkHeight = 16;
-        static const uint32_t chunkLength = 16;
-    private:
-        gml::Vec3 chunkPosition; // Position of the center of the chunk
-        // 16 L x 16 W x 128 H (MC style)
-        // I am getting no default constructor for block error in the chunk constructor because I am not using the : Block(...) syntax. However, I dont think I can use that syntax since it is an array. I also cant use static members to initalize this. Therefore, I think I must use the dreaded malloc (😱)
-        GameClasses::Block* chunkData;//[chunkWidth][chunkHeight][chunkLength];
+        GLuint vertexBufferObject;
+        GLuint vertexArrayObject;
+        Block*** chunkBlockData;
+        int visibleBlocks;
+        gml::Vec3 chunkPosition;
+        // temp
+        EngineClasses::Shader* chunkShader;
+        GLuint modelMatLocation;
+        GLuint viewMatLocation;
+        GLuint projMatLocation;
 
     public:
-        Chunk(gml::Vec3 chunkPosition, EngineClasses::Shader* defaultShader);
+        Chunk(gml::Vec3 chunkPosition, EngineClasses::Shader* chunkShader);
         ~Chunk();
 
-        void draw(EngineClasses::Camera sceneCamera);
+        void update();
+        void render(EngineClasses::Camera sceneCamera);
+    private:
+        void createMesh();
+        void createCube(int x, int y, int z, int offset);
+
 };
 
 } // namespace GameClasses

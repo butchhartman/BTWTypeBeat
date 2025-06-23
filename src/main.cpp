@@ -80,10 +80,12 @@ int main() {
     );
 
 
-    EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
-    GameClasses::Chunk myChunk = GameClasses::Chunk(gml::Vec3(9.0f, 0.0f, 0.0f),  &BasicShader);
+    // EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
 
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    GameClasses::Chunk testChunk = GameClasses::Chunk(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
+    GameClasses::Chunk testChunk2 = GameClasses::Chunk(gml::Vec3(-16.0f, 0.0f, 0.0f), &BasicShader);
 
     while (sysMan.windowManager.isWindowActive()) {
 
@@ -93,7 +95,8 @@ int main() {
         // sysMan.renderingManager.drawObject(&myCube);
         // sysMan.renderingManager.drawObject(&mySecondsCube);
         // sysMan.renderingManager.drawObject(&dirtCube);
-        myChunk.draw(*sysMan.renderingManager.getCameraPtr());
+        testChunk.render(*(sysMan.renderingManager.getCameraPtr()));
+        testChunk2.render(*(sysMan.renderingManager.getCameraPtr()));
 
         sysMan.windowManager.swapBuffers();
         sysMan.windowManager.pollEvents();

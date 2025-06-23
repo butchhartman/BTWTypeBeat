@@ -21,7 +21,7 @@ namespace EngineSingletons {
 
     void RenderingManager::init() {
         this->camera = EngineClasses::Camera(
-            gml::Vec3(0.0f, 0.0f, 3.0f),
+            gml::Vec3(0.0f, 0.0f, 0.0f),
             2.5f,
             0.05f,
             0.0f,
