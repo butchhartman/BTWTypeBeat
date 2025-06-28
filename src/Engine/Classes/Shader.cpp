@@ -76,7 +76,10 @@ Shader::Shader(const std::string vertexShaderPath, const std::string fragmentSha
 
 Shader::~Shader() {
     // idk
-    glDeleteProgram(this->programID);
+    // Removed this because it causes scope issues with static variables.
+    // deconstructor gets called for the local variable but ends up affecting the global shader 
+    // glDeleteProgram(this->programID);
+
 }
 
 void Shader::use() {

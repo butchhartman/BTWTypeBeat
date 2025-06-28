@@ -59,13 +59,41 @@ const float cubeVertices[108] = {
 
 
 namespace GameClasses {
-    Chunk::Chunk(gml::Vec3 chunkPosition, EngineClasses::Shader* chunkShader) : chunkPosition(0.0f, 0.0f, 0.0f) {
-        this->chunkShader = chunkShader;
-        this->chunkPosition = chunkPosition;
+    EngineClasses::Shader Chunk::chunkShader;
 
-        this->modelMatLocation = glGetUniformLocation(this->chunkShader->getID(), "modelMat");
-        this->viewMatLocation = glGetUniformLocation(this->chunkShader->getID(), "viewMat");
-        this->projMatLocation = glGetUniformLocation(this->chunkShader->getID(), "projectionMat");
+    Chunk::Chunk(gml::Vec3 chunkPosition) : chunkPosition(0.0f, 0.0f, 0.0f) {
+        this->chunkPosition = chunkPosition;
+        this->loaded = false;
+    }
+
+    Chunk::~Chunk() {
+
+    }
+
+    void Chunk::initChunkStaticData() {
+        Chunk::chunkShader = EngineClasses::Shader("Shaders/vertexShader.vert", "Shaders/fragmentShaderGreen.frag");
+    }
+
+    void Chunk::update() {
+
+    }
+
+    void Chunk::render(EngineClasses::Camera sceneCamera) {
+        Chunk::chunkShader.use();
+        glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferObject);
+        glBindVertexArray(this->vertexArrayObject);
+
+        glUniformMatrix4fv(this->modelMatLocation, 1, GL_FALSE, gml::Mat4::translation(this->chunkPosition.X(), this->chunkPosition.Y(), this->chunkPosition.Z()).getData());
+        glUniformMatrix4fv(this->viewMatLocation, 1, GL_FALSE, sceneCamera.getViewMat().getData());
+        glUniformMatrix4fv(this->projMatLocation, 1, GL_FALSE, sceneCamera.getPerspectiveMat().getData());
+
+        glDrawArrays(GL_TRIANGLES, 0, this->visibleBlocks*36); // There are 36 vertices in 1 cube
+    }
+
+    void Chunk::load() {
+        this->modelMatLocation = glGetUniformLocation(Chunk::chunkShader.getID(), "modelMat");
+        this->viewMatLocation = glGetUniformLocation(Chunk::chunkShader.getID(), "viewMat");
+        this->projMatLocation = glGetUniformLocation(Chunk::chunkShader.getID(), "projectionMat");
 
         // Create buffer but do nothing with it since the data it contains will vary
         glGenBuffers(1, &(this->vertexBufferObject));
@@ -80,6 +108,7 @@ namespace GameClasses {
         glEnableVertexAttribArray(0);
 
         // array of T*** holds data of type T**
+        // The new keyword automatically calls the initializer function for each member so this array is populated
         this->chunkBlockData = new Block**[Chunk::chunkSize];
 
         for (int i = 0; i < Chunk::chunkSize; i++) {
@@ -89,12 +118,12 @@ namespace GameClasses {
             }
         }
 
-        // Create mesh on chunk init 
         this->createMesh();
 
+        this->loaded = true;
     }
 
-    Chunk::~Chunk() {
+    void Chunk::unload() {
         glDeleteBuffers(1, &(this->vertexBufferObject));
         glDeleteVertexArrays(1, &(this->vertexArrayObject));
 
@@ -107,20 +136,8 @@ namespace GameClasses {
         delete[] this->chunkBlockData;
     }
 
-    void Chunk::update() {
-
-    }
-
-    void Chunk::render(EngineClasses::Camera sceneCamera) {
-        this->chunkShader->use();
-        glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferObject);
-        glBindVertexArray(this->vertexArrayObject);
-
-        glUniformMatrix4fv(this->modelMatLocation, 1, GL_FALSE, gml::Mat4::translation(this->chunkPosition.X(), this->chunkPosition.Y(), this->chunkPosition.Z()).getData());
-        glUniformMatrix4fv(this->viewMatLocation, 1, GL_FALSE, sceneCamera.getViewMat().getData());
-        glUniformMatrix4fv(this->projMatLocation, 1, GL_FALSE, sceneCamera.getPerspectiveMat().getData());
-
-        glDrawArrays(GL_TRIANGLES, 0, this->visibleBlocks*36); // There are 36 vertices in 1 cube
+    gml::Vec3 Chunk::getPosition() {
+        return this->chunkPosition;
     }
 
     void Chunk::createMesh() {
@@ -153,8 +170,8 @@ namespace GameClasses {
                         this->chunkBlockData[x][y][z-1].getActive() == true) ) {
                             continue;
                     }
-                    
 
+                    
                     this->visibleBlocks++;
                 }
             }
@@ -197,9 +214,10 @@ namespace GameClasses {
     void Chunk::createCube(int x, int y, int z, int offset) {
         float thisCubeVertices[108];
         for (int i = 0; i < 108; i += 3) { // stride of 3
-            thisCubeVertices[i] = cubeVertices[i] + (float)x; 
-            thisCubeVertices[i+1] = cubeVertices[i+1] + (float)y; 
-            thisCubeVertices[i+2] = cubeVertices[i+2] + (float)z;
+            // Subtract the chunk size so that the chunk's position describes the position of its center instead of it's bottom left block
+            thisCubeVertices[i] = cubeVertices[i] + (float)x - chunkSize/2.0f; 
+            thisCubeVertices[i+1] = cubeVertices[i+1] + (float)y - chunkSize/2.0f; 
+            thisCubeVertices[i+2] = cubeVertices[i+2] + (float)z - chunkSize/2.0f;
         }
 
         glBufferSubData(GL_ARRAY_BUFFER, offset * sizeof(cubeVertices), sizeof(cubeVertices), thisCubeVertices);

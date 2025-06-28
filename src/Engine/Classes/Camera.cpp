@@ -152,4 +152,8 @@ gml::Mat4 Camera::getPerspectiveMat() {
     );
 }
 
+gml::Vec3 Camera::getCameraPosition() {
+    return this->CameraPos;
+}
+
 } // namespace EngineClasses

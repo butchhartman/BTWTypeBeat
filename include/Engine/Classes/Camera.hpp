@@ -55,6 +55,7 @@ class Camera {
         void updateRotation(float newMouseXPos, float newMouseYPos);
         gml::Mat4 getViewMat();
         gml::Mat4 getPerspectiveMat();
+        gml::Vec3 getCameraPosition();
 };
 
 } // namespace EngineClasses

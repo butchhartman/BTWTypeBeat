@@ -26,6 +26,8 @@ namespace GameClasses {
 class Chunk {
     public:
         static const int chunkSize = 16;
+        static EngineClasses::Shader chunkShader;
+        bool loaded;
     private:
         GLuint vertexBufferObject;
         GLuint vertexArrayObject;
@@ -33,17 +35,23 @@ class Chunk {
         int visibleBlocks;
         gml::Vec3 chunkPosition;
         // temp
-        EngineClasses::Shader* chunkShader;
+        // EngineClasses::Shader* chunkShader;
         GLuint modelMatLocation;
         GLuint viewMatLocation;
         GLuint projMatLocation;
 
     public:
-        Chunk(gml::Vec3 chunkPosition, EngineClasses::Shader* chunkShader);
+        Chunk(gml::Vec3 chunkPosition);
         ~Chunk();
+
+        static void initChunkStaticData();
 
         void update();
         void render(EngineClasses::Camera sceneCamera);
+        void load();
+        void unload();
+
+        gml::Vec3 getPosition();
     private:
         void createMesh();
         void createCube(int x, int y, int z, int offset);

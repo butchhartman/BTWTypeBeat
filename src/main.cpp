@@ -12,6 +12,7 @@
 #include <Engine/Singletons/EngineSystemsManager.hpp>
 
 #include <Game/Classes/Chunk.hpp>
+#include <Game/Classes/ChunkManager.hpp>
 
 
 EngineSingletons::EngineSystemsManager sysMan;
@@ -84,19 +85,20 @@ int main() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    GameClasses::Chunk testChunk = GameClasses::Chunk(gml::Vec3(0.0f, 0.0f, 0.0f), &BasicShader);
-    GameClasses::Chunk testChunk2 = GameClasses::Chunk(gml::Vec3(-16.0f, 0.0f, 0.0f), &BasicShader);
-
+    GameClasses::Chunk::initChunkStaticData();
+    // GameClasses::Chunk testChunk = GameClasses::Chunk(gml::Vec3(0.0f, 0.0f, 0.0f) );
+    // GameClasses::Chunk testChunk2 = GameClasses::Chunk(gml::Vec3(16.0f, 0.0f, 0.0f) );
+    // testChunk.load();
+    // testChunk2.load();
+    GameClasses::ChunkManager myManager = GameClasses::ChunkManager(2);
     while (sysMan.windowManager.isWindowActive()) {
 
         sysMan.renderingManager.frameBegin();
 
-        // TODO : Eventually have a function that allows you to submit an array of objects of the same mesh to draw using instancing
-        // sysMan.renderingManager.drawObject(&myCube);
-        // sysMan.renderingManager.drawObject(&mySecondsCube);
-        // sysMan.renderingManager.drawObject(&dirtCube);
-        testChunk.render(*(sysMan.renderingManager.getCameraPtr()));
-        testChunk2.render(*(sysMan.renderingManager.getCameraPtr()));
+        // testChunk.render(*(sysMan.renderingManager.getCameraPtr()));
+        // testChunk2.render(*(sysMan.renderingManager.getCameraPtr()));
+        myManager.update((sysMan.renderingManager.getCameraPtr())->getCameraPosition());
+        myManager.renderLoadedChunks(*(sysMan.renderingManager.getCameraPtr()));
 
         sysMan.windowManager.swapBuffers();
         sysMan.windowManager.pollEvents();
@@ -104,6 +106,9 @@ int main() {
 
         sysMan.renderingManager.frameEnd(sysMan.windowManager.getTime());
     }
+
+    // testChunk.unload();
+    // testChunk2.unload();
 
     sysMan.shutDown();
     return 0;   
