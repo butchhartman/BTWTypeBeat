@@ -75,10 +75,10 @@ int main() {
     // EngineClasses::Cube mySecondsCube = EngineClasses::Cube(gml::Vec3(3.0f, 0.25f, -0.77f), &BasicShader2);
 
     // TODO: Add texture management to some singleton (idk if rendering manager is ideal for this or not)
-    EngineClasses::Texture dirt = EngineClasses::Texture(
-        "a.bmp", 
-        EngineClasses::TextureFlags::TEXTURE_FILE_BMP_BIT
-    );
+    // EngineClasses::Texture dirt = EngineClasses::Texture(
+        // "a.bmp", 
+        // EngineClasses::TextureFlags::TEXTURE_FILE_BMP_BIT
+    // );
 
 
     // EngineClasses::TexturedCube dirtCube = EngineClasses::TexturedCube(gml::Vec3(-2.0f, 0.0f, 0.5f), &texShader, &dirt);
